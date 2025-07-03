@@ -25,7 +25,6 @@ for (let i = 1; i <= haircutsCount; i++) {
     const slideWrapper = document.createElement('div');
     slideWrapper.classList.add('sidebar__slide');
     slideWrapper.appendChild(slideImg);
-    console.log(slideWrapper);
 
     sliderContainer.appendChild(slideWrapper);
     slides.push(slideWrapper);
