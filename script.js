@@ -1,9 +1,12 @@
+const isMobile = window.matchMedia('(max-width: 768px)').matches;
 const haircutsCount = 7;
 
 const sliderContainer = document.querySelector('.sidebar__slider');
 const header = document.querySelector('header');
 const buttons = document.querySelectorAll('.price-list__category');
 const items = document.querySelectorAll('.price-list__item');
+
+let programmatic = false;
 
 header.addEventListener('mousemove', function (e) {
     const x = (e.clientX / window.innerWidth) * 100;
@@ -53,13 +56,18 @@ function showSlide(index) {
 
 showSlide(currentSlide);
 
+let first = true;
+
 buttons.forEach(button => {
     button.addEventListener('click', (e) => {
-        if (e.isTrusted) {
+        if (!first) {
+            document.querySelector(".price-list").style.minHeight = "100vh"
+            programmatic = true
             document.querySelector('.price-list .section__title').scrollIntoView({ behavior: 'smooth' });
         }
         buttons.forEach(b => b.classList.remove('active'));
         button.classList.add('active');
+
 
         const category = button.dataset.category;
 
@@ -91,4 +99,37 @@ buttons.forEach(button => {
     });
 });
 
-buttons[0].click()
+window.onload = () => {
+    buttons[0].click()
+    first = false
+}
+
+const nonFixedBtn = document.querySelector('.sidebar__button')
+const fixedBtn = document.querySelector('.mobile-nav')
+
+
+
+
+window.onscroll = (e) => {
+    const top = nonFixedBtn.getBoundingClientRect().top
+    if (!programmatic && !isMobile)
+        document.querySelector(".price-list").style.minHeight = "auto"
+    if (top <= 0 && isMobile) {
+        fixedBtn.style.top = "0px"
+        fixedBtn.style.display = 'block';
+        setTimeout(() => {
+            fixedBtn.style.clipPath = 'inset(0 0 0 0)';
+        }, 0);
+    } else if (isMobile) {
+        fixedBtn.style.top = top + 2 + "px"
+        fixedBtn.style.clipPath = 'inset(0 50% 0 50%)';
+        setTimeout(() => {
+            fixedBtn.style.display = 'block';
+        }, 0);
+    }
+
+}
+
+window.onscrollend = (e) =>
+    programmatic = false
+
